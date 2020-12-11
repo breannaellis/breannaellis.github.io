@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Breanna Ellis" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../img/favicon.ico">
+    <title>Project 1: Exploratory Data Analysis</title>
+    <meta name="generator" content="Hugo 0.79.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="../../post/">BLOG</a></li>
+        
+        <li><a href="../../projects/">PROJECTS</a></li>
+        
+        <li><a href="../../resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="../../project/project1/">Project 1: Exploratory Data Analysis</a></strong>
+          </h3>
+        </div>
+ 
+<div class="blog-title">
+          <h4>
+         January 1, 0001 
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<div id="data-wrangling-and-data-exploration" class="section level2">
+<h2>Data Wrangling and Data Exploration</h2>
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>For this project, I've chosen to use my Letterboxd.com data as well as weather data in Austin, TX. Letterboxd.com is a website where I track the movie I watch. I can rate the movies out of 5 stars, log when I watch them, and I usually add tags to my reviews so I can easily track who I watched the film with, if it made me cry, where I watch the film, etc. I was able to export the data from the website. The variables include the date, the name of the film, the year the film came out, if I tagged the movie (like a hashtag), the rating out of five stars, the review I wrote, and if I was rewatching the movie or not. The weather data I collected was from wunderground.com. This icluded the highs, lows and percipitation for the day. I watch movies pretty regularly so I wasn't expecting any substantial associations.</p>
+</div>
+<div id="importing-data" class="section level3">
+<h3>Importing Data</h3>
+<pre class="r"><code>library(tidyverse)
+library(&quot;readxl&quot;)</code></pre>
+<pre class="r"><code>reviewsss &lt;- read.csv(&quot;reviewsss.csv&quot;)
+project1weather &lt;- read_excel(&quot;Weather P1.xlsx&quot;)
+write_excel_csv(reviewsss, &quot;reviewsss.csv&quot;)
+write_excel_csv(project1weather, &quot;project1weather.xlsx&quot;)</code></pre>
+<p>This is where I entered my csv and excel data files.</p>
+</div>
+<div id="joining-data" class="section level3">
+<h3>Joining Data</h3>
+<pre class="r"><code>project1weather$date &lt;- as.factor(project1weather$date)
+# Left join data
+proj1joined &lt;- left_join(reviewsss, project1weather, by = c(Date = &quot;date&quot;))
+# altering my data set to add separate rows rather than a
+# list of movie Tags.
+proj1joined$Tags &lt;- as.character(proj1joined$Tags)
+Project1 &lt;- proj1joined %&gt;% separate_rows(Tags, sep = &quot;, &quot;)</code></pre>
+<p>I did a left join on these two data sets. I wan't to maintain all of the data from &quot;reviewsss&quot;. I only needed weather data for the dates in which I reviewed a movie. Reviews originally had 177 observations and Weather_P1 originally had 239 observations. The joined data set includes 177 total observations. This means that 33 obervations were dropped, all from the Weather_P1 dataset.</p>
+</div>
+<div id="wrangling-and-summary-statistics" class="section level3">
+<h3>Wrangling and Summary Statistics</h3>
+<pre class="r"><code># summary statistics for High ºF
+Project1 %&gt;% summarize(mean(`High ºF`, na.rm = T), sd(`High ºF`, 
+    na.rm = T), min(`High ºF`, na.rm = T), max(`High ºF`, na.rm = T), 
+    quantile(`High ºF`, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 5 x 5
+##   `mean(\`High ºF… `sd(\`High ºF\`… `min(\`High ºF\… `max(\`High ºF\…
+##              &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1             85.1             19.1               45             105.
+## 2             85.1             19.1               45             105.
+## 3             85.1             19.1               45             105.
+## 4             85.1             19.1               45             105.
+## 5             85.1             19.1               45             105.
+## # … with 1 more variable: `quantile(\`High ºF\`, na.rm = T)` &lt;dbl&gt;</code></pre>
+<pre class="r"><code># summary statistics for low ºF
+Project1 %&gt;% summarize(mean(`low ºF`, na.rm = T), sd(`low ºF`, 
+    na.rm = T), min(`low ºF`, na.rm = T), max(`low ºF`, na.rm = T), 
+    quantile(`low ºF`, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 5 x 5
+##   `mean(\`low ºF\… `sd(\`low ºF\`,… `min(\`low ºF\`… `max(\`low ºF\`…
+##              &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1             62.5             17.7             35.1             80.1
+## 2             62.5             17.7             35.1             80.1
+## 3             62.5             17.7             35.1             80.1
+## 4             62.5             17.7             35.1             80.1
+## 5             62.5             17.7             35.1             80.1
+## # … with 1 more variable: `quantile(\`low ºF\`, na.rm = T)` &lt;dbl&gt;</code></pre>
+<pre class="r"><code># summary statistics for Year the film was released
+Project1 %&gt;% summarize(mean(Year, na.rm = T), sd(Year, na.rm = T), 
+    min(Year, na.rm = T), max(Year, na.rm = T), quantile(Year, 
+        na.rm = T))</code></pre>
+<pre><code>## # A tibble: 5 x 5
+##   `mean(Year, na.… `sd(Year, na.rm… `min(Year, na.r… `max(Year, na.r…
+##              &lt;dbl&gt;            &lt;dbl&gt;            &lt;int&gt;            &lt;int&gt;
+## 1            2010.             13.9             1954             2020
+## 2            2010.             13.9             1954             2020
+## 3            2010.             13.9             1954             2020
+## 4            2010.             13.9             1954             2020
+## 5            2010.             13.9             1954             2020
+## # … with 1 more variable: `quantile(Year, na.rm = T)` &lt;dbl&gt;</code></pre>
+<pre class="r"><code># summary statistics for precipitation
+Project1 %&gt;% summarize(mean(`Precip. (In)`, na.rm = T), sd(`Precip. (In)`, 
+    na.rm = T), min(`Precip. (In)`, na.rm = T), max(`Precip. (In)`, 
+    na.rm = T), quantile(`Precip. (In)`, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 5 x 5
+##   `mean(\`Precip.… `sd(\`Precip. (… `min(\`Precip. … `max(\`Precip. …
+##              &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1           0.0277           0.0928                0              0.7
+## 2           0.0277           0.0928                0              0.7
+## 3           0.0277           0.0928                0              0.7
+## 4           0.0277           0.0928                0              0.7
+## 5           0.0277           0.0928                0              0.7
+## # … with 1 more variable: `quantile(\`Precip. (In)\`, na.rm = T)` &lt;dbl&gt;</code></pre>
+<pre class="r"><code># summary statistics for Ratings (out of five stars)
+Project1 %&gt;% summarize(mean(Rating, na.rm = T), sd(Rating, na.rm = T), 
+    min(Rating, na.rm = T), max(Rating, na.rm = T), quantile(Rating, 
+        na.rm = T))</code></pre>
+<pre><code>## # A tibble: 5 x 5
+##   `mean(Rating, n… `sd(Rating, na.… `min(Rating, na… `max(Rating, na…
+##              &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1             3.62             1.07              0.5                5
+## 2             3.62             1.07              0.5                5
+## 3             3.62             1.07              0.5                5
+## 4             3.62             1.07              0.5                5
+## 5             3.62             1.07              0.5                5
+## # … with 1 more variable: `quantile(Rating, na.rm = T)` &lt;dbl&gt;</code></pre>
+<p>These are the summary statistics for my all of my numeric value. All values are listed in order of mean, sd, min, max and quantile.</p>
+<p>The value 'High ºF' describes the highest predicted temperature for the day. High ºF: mean: 85.1, sd: 19.08, min: 45, max: 105.1, quantile: 45, 62.15, 100.00, 102.9, 105.1</p>
+<p>The value 'low ºF' describes the lowest predicted temperature for the day. Low ºF: mean: 62.4, sd: 17.7, min: 35.1, max: 80.1, quantile: 35.1, 41.5, 75.9, 79.0, 80.1</p>
+<p>The value 'Year' describes the year in which the film I watched came out. Year: mean: 2009.8, sd: 13.8, min: 1954, max: 2020, quantile: 1954, 2016, 2017, 2019, 2020</p>
+<p>The value 'Precip. (In)' describes the precipitation in inches for each day. Year: mean: 0.027, sd: 0.092, min: 0, max: 0.7, quantile: 0.0, 0.0, 0.0, 0.0, 0.7</p>
+<p>The value 'Rating' describes the rating out of 5 stars that I assigned each film. Year: mean: 3.6, sd: 1.06, min: 0.5, max: 5, quantile: 0.5, 3.0, 4.0, 4.5, 5</p>
+<pre class="r"><code># Summary statistics for `High ºF` when grouped by Tags
+Project1 %&gt;% group_by(Tags) %&gt;% summarize(mean(`High ºF`, na.rm = T), 
+    sd(`High ºF`, na.rm = T), min(`High ºF`, na.rm = T), max(`High ºF`, 
+        na.rm = T), quantile(`High ºF`, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 195 x 6
+## # Groups:   Tags [39]
+##    Tags  `mean(\`High ºF… `sd(\`High ºF\`… `min(\`High ºF\… `max(\`High ºF\…
+##    &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+##  1 936               81.2             19.7               52             105.
+##  2 936               81.2             19.7               52             105.
+##  3 936               81.2             19.7               52             105.
+##  4 936               81.2             19.7               52             105.
+##  5 936               81.2             19.7               52             105.
+##  6 ace              NaN               NA                Inf            -Inf 
+##  7 ace              NaN               NA                Inf            -Inf 
+##  8 ace              NaN               NA                Inf            -Inf 
+##  9 ace              NaN               NA                Inf            -Inf 
+## 10 ace              NaN               NA                Inf            -Inf 
+## # … with 185 more rows, and 1 more variable: `quantile(\`High ºF\`, na.rm =
+## #   T)` &lt;dbl&gt;</code></pre>
+<pre class="r"><code># Summary statistics for `Ratings` when grouped by Tags
+Project1 %&gt;% group_by(Tags) %&gt;% summarize(mean(Rating, na.rm = T), 
+    sd(Rating, na.rm = T), min(Rating, na.rm = T), max(Rating, 
+        na.rm = T), quantile(Rating, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 195 x 6
+## # Groups:   Tags [39]
+##    Tags  `mean(Rating, n… `sd(Rating, na.… `min(Rating, na… `max(Rating, na…
+##    &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+##  1 936               3.52             1.12              0.5              5  
+##  2 936               3.52             1.12              0.5              5  
+##  3 936               3.52             1.12              0.5              5  
+##  4 936               3.52             1.12              0.5              5  
+##  5 936               3.52             1.12              0.5              5  
+##  6 ace               3.5             NA                 3.5              3.5
+##  7 ace               3.5             NA                 3.5              3.5
+##  8 ace               3.5             NA                 3.5              3.5
+##  9 ace               3.5             NA                 3.5              3.5
+## 10 ace               3.5             NA                 3.5              3.5
+## # … with 185 more rows, and 1 more variable: `quantile(Rating, na.rm =
+## #   T)` &lt;dbl&gt;</code></pre>
+<p>The code above includes the summary statistics for <code>High ºF</code> when grouped by Tags as well as the summary statistics for Ratings when grouped by Tags. There are over a dozen Tag options, and the data can be found above.</p>
+<pre class="r"><code># average rating for movies with year 2019
+Project1 %&gt;% filter(Year == &quot;2019&quot;) %&gt;% summarize(mean(Rating, 
+    na.rm = T))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `mean(Rating, na.rm = T)`
+##                       &lt;dbl&gt;
+## 1                      3.71</code></pre>
+<pre class="r"><code># This is the max precipitation for the first 20 rows
+Project1 %&gt;% slice(1:20) %&gt;% summarize(max(`Precip. (In)`, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `max(\`Precip. (In)\`, na.rm = T)`
+##                                &lt;dbl&gt;
+## 1                               0.13</code></pre>
+<pre class="r"><code># highest rated films that came out in 2019 according to me
+# and when the high temp was greater than 60 degrees!
+Project1 %&gt;% filter(Year == &quot;2019&quot; &amp; `High ºF` &gt;= 60) %&gt;% summarise(max(Rating, 
+    na.rm = T))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `max(Rating, na.rm = T)`
+##                      &lt;dbl&gt;
+## 1                        5</code></pre>
+<pre class="r"><code># Arranged movie names in alphabetical order, then desc low
+# temp and then the mean of the low temp
+Project1 %&gt;% arrange(-desc(Name), desc(`low ºF`)) %&gt;% summarize(mean(`low ºF`, 
+    na.rm = T))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `mean(\`low ºF\`, na.rm = T)`
+##                           &lt;dbl&gt;
+## 1                          62.5</code></pre>
+<pre class="r"><code># Try grouping by two categorical veriables
+Project1 %&gt;% group_by(Rewatch, Tags) %&gt;% summarise(mean(Rating, 
+    na.rm = T))</code></pre>
+<pre><code>## # A tibble: 59 x 3
+## # Groups:   Rewatch [2]
+##    Rewatch Tags                     `mean(Rating, na.rm = T)`
+##    &lt;fct&gt;   &lt;chr&gt;                                        &lt;dbl&gt;
+##  1 Yes     936                                           3.78
+##  2 Yes     ace                                           3.5 
+##  3 Yes     atx                                           3.12
+##  4 Yes     bee hive                                      3.97
+##  5 Yes     bre myself and i                              3.92
+##  6 Yes     ho time                                       4.04
+##  7 Yes     i&#39;m on a true crime kick                      3.83
+##  8 Yes     i&#39;m the map                                   4   
+##  9 Yes     im a bell                                     4   
+## 10 Yes     im a cry baby                                 4.18
+## # … with 49 more rows</code></pre>
+<p>Using the filter function, I was able to determine that the mean rating for films I watched that were released in 2019 was 3.7 stars. Using slice to view the first twenty lines, the max percipitation was 0.13 inches. Using the filter function, I was able to determine that the max rating that I gave for a 2019 movie when the temperature high was above 60 degrees was 5 stars. I then Arranged movie names in alphabetical order, then desc low temp and then the mean of the low temp and found that it was 62.54. I then grouped by rewatch and tags and summarized the mean datas for those.</p>
+</div>
+<div id="tidying-and-rearranging" class="section level3">
+<h3>Tidying and Rearranging</h3>
+<pre class="r"><code># proof I know how to use Pivot wider
+wideproj1 &lt;- proj1joined %&gt;% separate_rows(Tags, sep = &quot;, &quot;) %&gt;% 
+    pivot_wider(names_from = &quot;Tags&quot;, values_from = &quot;Name&quot;)
+
+# Added a new column for average temp of the day and various
+# summary stats
+Project.1 &lt;- Project1 %&gt;% mutate(averagetemp = ((`low ºF` + 
+    `High ºF`)/2))
+# Selected variables date, high, low and precip, groupbyed by
+# average temp and then summarized the min rating
+Project.1 %&gt;% select(Name, Rating, `High ºF`, `low ºF`, Date, 
+    averagetemp) %&gt;% summarize(sd(averagetemp, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `sd(averagetemp, na.rm = T)`
+##                          &lt;dbl&gt;
+## 1                         18.3</code></pre>
+<pre class="r"><code># deleting coulums I don&#39;t want
+Project.1$meanyear &lt;- NULL
+Project.1$`Letterboxd URI` &lt;- NULL</code></pre>
+<p>This was where I proved that I knew how to use Pivot wider. I then added a new column to find the average temperature for each day. I then summarized the standard deviation of this and found that it was 18.3 degrees. I deleted a two columns that I would not be using in this project.</p>
+<pre class="r"><code># correlation matrix
+corproj1 &lt;- Project.1 %&gt;% select_if(is.numeric) %&gt;% cor(use = &quot;pair&quot;)</code></pre>
+<p>This is my correlation matrix that it was suggested to make.</p>
+</div>
+<div id="visulaizations" class="section level3">
+<h3>Visulaizations</h3>
+<pre class="r"><code># Make a correlation heatmap of your numeric variables
+Project.1 %&gt;% select_if(is.numeric) %&gt;% cor(use = &quot;pair&quot;) %&gt;% 
+    as.data.frame %&gt;% rownames_to_column %&gt;% pivot_longer(-1) %&gt;% 
+    ggplot(aes(rowname, name, fill = value)) + geom_tile() + 
+    geom_text(aes(label = round(value, 2))) + xlab(&quot;&quot;) + ylab(&quot;&quot;) + 
+    coord_fixed() + scale_fill_gradient2(low = &quot;red&quot;, mid = &quot;white&quot;, 
+    high = &quot;pink&quot;)</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /> This is my correlation matrix. My negative correlations are in orange and my positive correlations are pink. Correlations closer to zero are white and off white. All of my temperature datas besides the precipitation had positive correlations, and so did year and precipitation. Everything else had negative correlations.</p>
+<pre class="r"><code># geom point
+ggplot(Project.1, aes(`low ºF`, `High ºF`)) + geom_point(size = 2, 
+    aes(color = Rating)) + scale_color_gradient(low = &quot;white&quot;, 
+    high = &quot;blue&quot;) + ggtitle(&quot;Daily Temperatures and Film Rating&quot;) + 
+    xlab(&quot;Daily Low Temp (F)&quot;) + ylab(&quot;Daily High Temp (F)&quot;)</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># geom bar
+ggplot(Project.1, aes(x = Year, fill = Year)) + geom_bar(aes(y = Rating), 
+    stat = &quot;summary&quot;, fun = mean) + theme(axis.text.x = element_text(angle = 45, 
+    hjust = 1), legend.position = &quot;none&quot;) + ggtitle(&quot;Personal Film Ratings by Year Released&quot;) + 
+    xlab(&quot;Year of Film Release&quot;) + ylab(&quot;Rating out of 5&quot;)</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /> The geom_point graph is displaying daily low temperatures and daily high temperatures. It is colored by the rating of the film that I watched on that day. The higher rated films are dark blue and the lower rated films are white. I was attempting to see if there was a correlation between film ratings and temperature outside, but all I can conclude is that I watch a lot of movies when it's hot outside, which is a valid assumption giving that I live in Austin, TX.</p>
+<p>The geom_bar graph shows the average rating of the year in which I've watched a film. Year of film release is in the x-axis and the rating out of 5 is on the y-axis. I seem to have watched more films that were released in the 80s-present day, which makes sense for my age. Between 1954 and 1975, I've only seen movies that have came out in nine different years. There doesn't seem to be a major assumption that can be drawn from the relationship between ratings and year of film release date.</p>
+<pre class="r"><code># install.packages(&#39;cluster&#39;) if you need to
+library(cluster)
+pam1 &lt;- Project.1 %&gt;% pam(k = 3)
+pam1</code></pre>
+<pre><code>## Medoids:
+##       ID Date Name Year Letterboxd.URI Rating Rewatch Review Tags Watched.Date
+## [1,] 245   78  136 2016            147    2.0       1    166  936           73
+## [2,] 406  103   56 1996             58    4.5      NA    120  936           95
+## [3,] 449  111  179 2020            196    3.0      NA     61  936          102
+##      High ºF low ºF Precip. (In) averagetemp
+## [1,]      NA     NA           NA          NA
+## [2,]      NA     NA           NA          NA
+## [3,]      NA     NA           NA          NA
+## Clustering vector:
+##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 1 1 2 2 2 2 2 2 1 2 2 2 3 3 1 1 2
+##  [38] 1 2 1 2 2 2 2 1 2 2 2 2 1 1 1 3 3 1 2 2 1 1 2 1 2 3 3 2 2 3 3 3 3 3 3 3 3
+##  [75] 3 1 1 1 1 3 1 1 1 1 1 2 2 2 2 2 3 3 3 3 3 3 3 3 2 2
+##  [ reached getOption(&quot;max.print&quot;) -- omitted 676 entries ]
+## Objective function:
+##    build     swap 
+## 121.0764 119.9862 
+## 
+## Available components:
+##  [1] &quot;medoids&quot;    &quot;id.med&quot;     &quot;clustering&quot; &quot;objective&quot;  &quot;isolation&quot; 
+##  [6] &quot;clusinfo&quot;   &quot;silinfo&quot;    &quot;diss&quot;       &quot;call&quot;       &quot;data&quot;</code></pre>
+<pre class="r"><code>pamclust &lt;- Project.1 %&gt;% mutate(cluster = as.factor(pam1$clustering))
+pamclust %&gt;% ggplot(aes(Rating, averagetemp, color = Year)) + 
+    geom_point()</code></pre>
+<p><img src="../../project/project1_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pamclust %&gt;% group_by(cluster) %&gt;% summarize_if(is.numeric, mean, 
+    na.rm = T)</code></pre>
+<pre><code>## # A tibble: 3 x 7
+##   cluster  Year Rating `High ºF` `low ºF` `Precip. (In)` averagetemp
+##   &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;
+## 1 1       2008.   3.73      80.5     58.0         0.0264        69.3
+## 2 2       2010.   3.62      81.6     58.8         0.0171        70.2
+## 3 3       2011.   3.52      93.1     70.5         0.0396        81.8</code></pre>
+<pre class="r"><code>pam1$silinfo$avg.width</code></pre>
+<pre><code>## [1] 0.2717471</code></pre>
+<p>Clusters were formed by grouping data points to the nearest medoid. The data appears to be rather split, and there doesn't seem to be any major correlation between the year in which the film came out when compared across the board for ratings and averagetemperature. The average silhouette width is 0.667, which indicates that a resonable sttucture has been found.</p>
+<P style="page-break-before: always">
+
+</div>
+</div>
+
+            
+        <hr>         <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div> 
+            </div>
+          </div>
+
+   <hr>  <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div> 
+        </div>
+      </div>
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../../js/docs.min.js"></script>
+<script src="../../js/main.js"></script>
+
+<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,41 @@
+---
+title: Breanna's Blog Post
+author: 'Breanna Ellis'
+date: '2020-12-09'
+slug: test-blog-post
+categories: []
+tags: []
+description: ''
+---
+Blog post. blog post. Breanna's blog post. hehe
+
+```{r setup, include= FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+#install.packages("reticulate")
+library(reticulate)
+```
+
+
+```{r}
+#R code chunk
+hi<-"Hello"
+```
+
+
+```{python}
+#python code chunk
+hi="world"
+print(r.hi,hi)#access R-defined objects with r.
+
+```
+
+```{r}
+#R code chunk
+cat(c(hi,py$hi))#access Python-defined objects with py$
+```
+
+
+
+[Link to project 1](/project/project1/)
+
+[Link to google](https://www.google.com)

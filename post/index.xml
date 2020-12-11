@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on My Cool Site</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on My Cool Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Fri, 11 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cowboy Frogs!</title>
+      <link>/post/2020/12/11/cowboy-frogs/</link>
+      <pubDate>Fri, 11 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/12/11/cowboy-frogs/</guid>
+      <description>Yeehaw! Look at these two rootin-tootin cowboys! They love Rstudio more than Python but that&#39;s just because they&#39;re used to Rstudio!! Below is some code in both Rstudio and Python that shows Dr. Woodword that I can get the two languages to talk to each other! It ain&#39;t fancy but it works!
+ #R code chunk hi&amp;lt;-&amp;quot;Hello&amp;quot; #python code chunk hi=&amp;quot;world&amp;quot; print(r.hi,hi)#access R-defined objects with r. ## Hello world #R code chunk cat(c(hi,py$hi))#access Python-defined objects with py$ ## Hello world hist(quakes$mag) import re match=re.</description>
+    </item>
+    
+  </channel>
+</rss>

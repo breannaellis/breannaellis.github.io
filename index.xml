@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My Cool Site</title>
+    <link>/</link>
+    <description>Recent content on My Cool Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Fri, 11 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cowboy Frogs!</title>
+      <link>/post/2020/12/11/cowboy-frogs/</link>
+      <pubDate>Fri, 11 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/12/11/cowboy-frogs/</guid>
+      <description>Yeehaw! Look at these two rootin-tootin cowboys! They love Rstudio more than Python but that&#39;s just because they&#39;re used to Rstudio!! Below is some code in both Rstudio and Python that shows Dr. Woodword that I can get the two languages to talk to each other! It ain&#39;t fancy but it works!
+ #R code chunk hi&amp;lt;-&amp;quot;Hello&amp;quot; #python code chunk hi=&amp;quot;world&amp;quot; print(r.hi,hi)#access R-defined objects with r. ## Hello world #R code chunk cat(c(hi,py$hi))#access Python-defined objects with py$ ## Hello world hist(quakes$mag) import re match=re.</description>
+    </item>
+    
+    <item>
+      <title>Project 1: Exploratory Data Analysis</title>
+      <link>/project/project1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/project/project1/</guid>
+      <description>Data Wrangling and Data Exploration Introduction For this project, I&#39;ve chosen to use my Letterboxd.com data as well as weather data in Austin, TX. Letterboxd.com is a website where I track the movie I watch. I can rate the movies out of 5 stars, log when I watch them, and I usually add tags to my reviews so I can easily track who I watched the film with, if it made me cry, where I watch the film, etc.</description>
+    </item>
+    
+    <item>
+      <title>Project 2: Modeling, Testing, and Predicting</title>
+      <link>/project/project2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/project/project2/</guid>
+      <description>Introducing Dataset library(tidyverse) library(dplyr) library(plotROC) library(pROC) library(rstatix) library(lmtest) baseball &amp;lt;- read.csv(&amp;quot;https://vincentarelbundock.github.io/Rdatasets/csv/vcd/Baseball.csv&amp;quot;) data(&amp;quot;baseball&amp;quot;) #altering dataset baseball &amp;lt;- baseball %&amp;gt;% mutate(league86 = ifelse(league86 == &amp;quot;N&amp;quot;, 1, 0), div86 = ifelse(div86 == &amp;quot;E&amp;quot;, 1, 0)) %&amp;gt;% filter(complete.cases(.)) %&amp;gt;% select(name1, name2, atbat86, hits86, homer86, runs86, rbi86, walks86, years, atbat, hits, homeruns, runs, rbi, walks, league86, div86, team86, sal87) #number of observations length(baseball$name1) ## [1] 263 baseball is a data set with numerous variables regarding the yearly batting records for all major league baseball players.</description>
+    </item>
+    
+    <item>
+      <title>Projects</title>
+      <link>/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/</guid>
+      <description> Check out some of my coding projects below:
+ Wrangling &amp;amp; Exploratory Data Analysis
+ Modeling, Inference, Prediction
+  -- </description>
+    </item>
+    
+    <item>
+      <title>Resume</title>
+      <link>/resume/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/resume/</guid>
+      <description>  </description>
+    </item>
+    
+  </channel>
+</rss>

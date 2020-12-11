@@ -1,0 +1,204 @@
+---
+title: 'Project 1: Exploratory Data Analysis'
+author: "Breanna Ellis, class: SDS348"
+date: 'Oct 18, 2020'
+output:
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+  pdf_document:
+    toc: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+```
+
+## Data Wrangling and Data Exploration
+
+### Introduction
+For this project, I've chosen to use my Letterboxd.com data as well as weather data in Austin, TX. Letterboxd.com is a website where I track the movie I watch. I can rate the movies out of 5 stars, log when I watch them, and I usually add tags to my reviews so I can easily track who I watched the film with, if it made me cry, where I watch the film, etc. I was able to export the data from the website. The variables include the date, the name of the film, the year the film came out, if I tagged the movie (like a hashtag), the rating out of five stars, the review I wrote, and if I was rewatching the movie or not. The weather data I collected was from wunderground.com. This icluded the highs, lows and percipitation for the day. I watch movies pretty regularly so I wasn't expecting any substantial associations.
+
+
+
+```{r}
+
+```
+
+
+### Importing Data
+
+
+```{r}
+library(tidyverse)
+library("readxl")
+```
+    
+```{r}
+reviewsss <- read.csv("reviewsss.csv")
+project1weather <- read_excel("Weather P1.xlsx")
+write_excel_csv(reviewsss, "reviewsss.csv")
+write_excel_csv(project1weather, "project1weather.xlsx")
+
+
+```
+This is where I entered my csv and excel data files.
+    
+    
+### Joining Data
+
+```{r}
+project1weather$date <- as.factor(project1weather$date)
+#Left join data
+proj1joined <- left_join(reviewsss, project1weather, by=c("Date"="date"))
+#altering my data set to add separate rows rather than a list of movie Tags.
+proj1joined$Tags <-as.character(proj1joined$Tags)
+Project1 <- proj1joined%>% separate_rows(Tags,sep=", ")
+
+
+```
+I did a left join on these two data sets. I wan't to maintain all of the data from "reviewsss". I only needed weather data for the dates in which I reviewed a movie. Reviews originally had 177 observations and Weather_P1 originally had 239 observations. The joined data set includes 177 total observations. This means that 33 obervations were dropped, all from the Weather_P1 dataset.
+
+
+### Wrangling and Summary Statistics 
+
+ 
+```{r}
+#summary statistics for High ºF
+Project1%>% summarize(mean(`High ºF`, na.rm=T), sd(`High ºF`,na.rm=T), min(`High ºF`,na.rm=T), max(`High ºF`,na.rm=T),quantile(`High ºF`,na.rm=T))
+#summary statistics for low ºF
+Project1%>% summarize(mean(`low ºF`,na.rm=T), sd(`low ºF`,na.rm=T), min(`low ºF`,na.rm=T), max(`low ºF`,na.rm=T),quantile(`low ºF`,na.rm=T))
+#summary statistics for Year the film was released
+Project1%>% summarize(mean(Year,na.rm=T), sd(Year,na.rm=T), min(Year,na.rm=T), max(Year,na.rm=T),quantile(Year,na.rm=T))
+#summary statistics for precipitation
+Project1%>% summarize(mean(`Precip. (In)`,na.rm=T), sd(`Precip. (In)`,na.rm=T), min(`Precip. (In)`,na.rm=T), max(`Precip. (In)`,na.rm=T),quantile(`Precip. (In)`,na.rm=T))
+#summary statistics for Ratings (out of five stars)
+Project1%>% summarize(mean(Rating,na.rm=T), sd(Rating,na.rm=T), min(Rating,na.rm=T), max(Rating,na.rm=T),quantile(Rating,na.rm=T))
+
+```
+ These are the summary statistics for my all of my numeric value.
+ All values are listed in order of mean, sd, min, max and quantile.
+ 
+ The value 'High ºF' describes the highest predicted temperature for the day.
+ High ºF: mean: 85.1, sd: 19.08, min: 45, max: 105.1, quantile: 45, 62.15, 100.00, 102.9, 105.1
+ 
+ The value 'low ºF' describes the lowest predicted temperature for the day.
+Low ºF: mean: 62.4, sd: 17.7, min: 35.1, max: 80.1, quantile: 35.1, 41.5, 75.9, 79.0, 80.1
+
+The value 'Year' describes the year in which the film I watched came out.
+Year: mean: 2009.8, sd: 13.8, min: 1954, max: 2020, quantile: 1954, 2016, 2017, 2019, 2020
+
+The value 'Precip. (In)' describes the precipitation in inches for each day. 
+Year: mean: 0.027, sd: 0.092, min: 0, max: 0.7, quantile: 0.0, 0.0, 0.0, 0.0, 0.7
+
+The value 'Rating' describes the rating out of 5 stars that I assigned each film.
+Year: mean: 3.6, sd: 1.06, min: 0.5, max: 5, quantile: 0.5, 3.0, 4.0, 4.5, 5
+
+ 
+```{r}
+
+#Summary statistics for `High ºF` when grouped by Tags
+Project1%>% group_by(Tags) %>%summarize(mean(`High ºF`,na.rm=T), sd(`High ºF`,na.rm=T), min(`High ºF`,na.rm=T), max(`High ºF`,na.rm=T),quantile(`High ºF`,na.rm=T))
+#Summary statistics for `Ratings` when grouped by Tags
+Project1%>% group_by(Tags)%>%summarize(mean(Rating,na.rm=T), sd(Rating,na.rm=T), min(Rating,na.rm=T), max(Rating,na.rm=T),quantile(Rating,na.rm=T))
+
+
+```
+ The code above includes the summary statistics for `High ºF` when grouped by Tags as well as the summary statistics for Ratings when grouped by Tags. There are over a dozen Tag options, and the data can be found above. 
+ 
+ 
+```{r}
+#average rating for movies with year 2019
+Project1 %>% filter(Year=="2019") %>% summarize(mean(Rating,na.rm=T))
+#This is the max precipitation for the first 20 rows
+Project1 %>% slice(1:20) %>% summarize(max(`Precip. (In)`,na.rm=T))
+#highest rated films that came out in 2019 according to me and when the high temp was greater than 60 degrees!
+Project1 %>% filter(Year=="2019" & `High ºF`>=60) %>% summarise(max(Rating, na.rm=T))
+#Arranged movie names in alphabetical order, then desc low temp and then the mean of the low temp
+Project1 %>% arrange(-desc(Name), desc(`low ºF`)) %>% summarize(mean(`low ºF`,na.rm=T))
+#Try grouping by two categorical veriables
+Project1 %>% group_by(Rewatch,Tags) %>% summarise(mean(Rating,na.rm=T))
+
+```
+Using the filter function, I was able to determine that the mean rating for films I watched that were released in 2019 was 3.7 stars. Using slice to view the first twenty lines, the max percipitation was 0.13 inches. Using the filter function, I was able to determine that the max rating that I gave for a 2019 movie when the temperature high was above 60 degrees was 5 stars. I then Arranged movie names in alphabetical order, then desc low temp and then the mean of the low temp and found that it was 62.54. I then grouped by rewatch and tags and summarized the mean datas for those.
+ 
+ 
+### Tidying and Rearranging 
+```{r}
+#proof I know how to use Pivot wider
+wideproj1 <- proj1joined%>% separate_rows(Tags,sep=", ") %>% pivot_wider(names_from="Tags", values_from="Name")
+
+#Added a new column for average temp of the day and various summary stats
+Project.1 <- Project1 %>% mutate(averagetemp = ((`low ºF`+`High ºF`)/2))
+# Selected variables date, high, low and precip, groupbyed by average temp and then summarized the min rating
+Project.1 %>% select(Name, Rating, `High ºF`,`low ºF`,Date, averagetemp) %>% summarize(sd(averagetemp,na.rm=T))
+
+
+#deleting coulums I don't want
+Project.1$meanyear<-NULL
+Project.1$`Letterboxd URI`<-NULL
+```
+This was where I proved that I knew how to use Pivot wider. I then added a new column to find the average temperature for each day. I then summarized the standard deviation of this and found that it was 18.3 degrees. I deleted a two columns that I would not be using in this project.
+
+```{r}
+
+#correlation matrix
+corproj1<- Project.1 %>% select_if(is.numeric) %>% cor(use="pair")
+```
+This is my correlation matrix that it was suggested to make.
+
+
+###Visulaizations
+```{r}
+#Make a correlation heatmap of your numeric variables
+Project.1%>%select_if(is.numeric)%>%cor(use="pair")%>%as.data.frame%>%
+rownames_to_column%>%pivot_longer(-1)%>%
+ggplot(aes(rowname,name,fill=value))+geom_tile()+
+geom_text(aes(label=round(value,2)))+
+xlab("")+ylab("")+coord_fixed()+
+scale_fill_gradient2(low="red",mid="white",high="pink")
+```
+This is my correlation matrix. My negative correlations are in orange and my positive correlations are pink. Correlations closer to zero are white and off white. All of my temperature datas besides the precipitation had positive correlations, and so did year and precipitation. Everything else had negative correlations.    
+    
+```{r}
+
+#geom point
+ggplot(Project.1, aes(`low ºF`, `High ºF`))+geom_point(size=2, aes(color=Rating)) + scale_color_gradient(low="white", high="blue") + ggtitle("Daily Temperatures and Film Rating")+xlab("Daily Low Temp (F)")+ylab("Daily High Temp (F)")
+
+#geom bar
+ggplot(Project.1, aes(x=Year,fill=Year))+geom_bar(aes(y=Rating), stat="summary", fun=mean) + theme(axis.text.x = element_text(angle=45, hjust=1),
+legend.position="none") + ggtitle("Personal Film Ratings by Year Released")+xlab("Year of Film Release")+ylab("Rating out of 5")
+```
+The geom_point graph is displaying daily low temperatures and daily high temperatures. It is colored by the rating of the film that I watched on that day. The higher rated films are dark blue and the lower rated films are white. I was attempting to see if there was a correlation between film ratings and temperature outside, but all I can conclude is that I watch a lot of movies when it's hot outside, which is a valid assumption giving that I live in Austin, TX. 
+
+The geom_bar graph shows the average rating of the year in which I've watched a film. Year of film release is in the x-axis and the rating out of 5 is on the y-axis. I seem to have watched more films that were released in the 80s-present day, which makes sense for my age. Between 1954 and 1975, I've only seen movies that have came out in nine different years. There doesn't seem to be a major assumption that can be drawn from the relationship between ratings and year of film release date. 
+    
+
+```{r}
+#install.packages("cluster") if you need to
+library(cluster)
+pam1<-Project.1 %>%pam(k=3)
+pam1
+
+pamclust<-Project.1 %>% mutate(cluster=as.factor(pam1$clustering))
+pamclust %>% ggplot(aes(Rating,averagetemp,color=Year)) + geom_point()
+
+pamclust %>% group_by(cluster) %>% summarize_if(is.numeric,mean,na.rm=T)
+
+pam1$silinfo$avg.width
+
+```
+Clusters were formed by grouping data points to the nearest medoid. The data appears to be rather split, and there doesn't seem to be any major correlation between the year in which the film came out when compared across the board for ratings and averagetemperature. The average silhouette width is 0.667, which indicates that a resonable sttucture has been found.
+
+
+<P style="page-break-before: always">
+\newpage
+    
+
+
+
+
+

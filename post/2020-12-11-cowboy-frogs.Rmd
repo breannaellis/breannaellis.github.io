@@ -1,0 +1,61 @@
+---
+title: Cowboy Frogs!
+author: ''
+date: '2020-12-11'
+slug: cowboy-frogs
+categories: []
+tags: []
+description: ''
+---
+
+Yeehaw! Look at these two rootin-tootin cowboys! They love Rstudio more than Python but that's just because they're used to Rstudio!! Below is some code in both Rstudio and Python that shows Dr. Woodword that I can get the two languages to talk to each other! It ain't fancy but it works!
+
+![](/post/2020-12-11-cowboy-frogs_files/cowboyfrogs.jpg){width=100%}</center>
+
+```{r setup, include= FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+#install.packages("reticulate")
+library(reticulate)
+```
+
+
+```{r}
+#R code chunk
+hi<-"Hello"
+```
+
+
+```{python}
+#python code chunk
+hi="world"
+print(r.hi,hi)#access R-defined objects with r.
+
+```
+
+```{r}
+#R code chunk
+cat(c(hi,py$hi))#access Python-defined objects with py$
+```
+
+```{r}
+hist(quakes$mag)
+```
+
+```{python}
+import re
+match=re.match("/d+", "SDS348")
+
+```
+
+```{r}
+quakes<-quakes
+```
+
+```{python}
+r.quakes.mag.mean()
+```
+
+
+[Link to project 1](/project/project1/)
+
+[Link to google](https://www.google.com)
